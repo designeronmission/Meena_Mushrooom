@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mushroom Village - Premium Quantum Launch</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron:500,700,900&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background-color: #020408;
+        }
+
+        .logo-corn {
+            width: 140px;
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));
+        }
+
+        /* Ambient Master Stage */
+        .scene-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color:#051404;
+            perspective: 1000px;
+        }
+
+        /* Deep Cosmic Underglow */
+        .scene-container::before {
+            content: '';
+            position: absolute;
+            bottom: -15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 900px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(6, 78, 59, 0.05) 50%, rgba(0, 0, 0, 0) 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Tech Grid Matrix Overlay */
+        .ui-grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(16, 185, 129, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center center;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Cinematic Quantum Warp Flash */
+        #portalFlash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #ffffff 0%, #5E8B2A 30%, #064e3b 60%, #020408 100%);
+            opacity: 0;
+            z-index: 100;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        /* ==========================================================================
+            CYBERPUNK GLASS HUD HEADERS
+           ========================================================================== */
+        .controls-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 35px 60px;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center;
+            z-index: 50;
+            transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .header-logo-panel {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .logo-placeholder {
+            padding-left: 15px;
+        }
+
+        .header-timer-panel {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 25px 40px;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            max-width: 800px;
+            margin: 0 auto;
+            transform: translateY(20px);
+        }
+
+        #timer {
+            font-family: 'Orbitron', monospace;
+            font-size: 54px;
+            font-weight: 900;
+            color: #ffffff;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 4px;
+            display: inline-block;
+            background: linear-gradient(180deg, #ffffff 30%, #a7f3d0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+        }
+
+        .launch-details-content {
+            width: 100%;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .status-badge {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: #5E8B2A;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .status-badge::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: #5E8B2A;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #5E8B2A;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        .brand-statement {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.6;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .header-action-panel {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .launch-btn {
+            background: transparent;
+            border: 1px solid #5E8B2A;
+            color: #75a83b;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 16px 38px;
+            border-radius: 4px;
+            cursor: pointer;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            background: rgba(16, 185, 129, 0.02);
+        }
+
+        .launch-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: 0.5s;
+        }
+
+        .launch-btn:hover::before {
+            left: 100%;
+        }
+
+        .launch-btn:hover {
+            background: #5E8B2A;
+            color: #020408;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* ==========================================================================
+            CYBERPUNK SECURE OVERRIDE MODAL POPUP
+           ========================================================================== */
+        .secure-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 4, 8, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .secure-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .secure-modal-box {
+            background: rgba(4, 12, 22, 0.75);
+            border: 1px solid rgb(94 139 42);
+            box-shadow: 0 0 50px rgba(16, 185, 129, 0.15), inset 0 0 20px rgba(16, 185, 129, 0.05);
+            padding: 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .secure-modal-overlay.active .secure-modal-box {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-headline {
+            font-family: 'Orbitron', sans-serif;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .modal-headline span {
+            color: #ef4444; /* Alert color */
+            animation: pulse 1s infinite alternate;
+        }
+
+        .modal-body-text {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .passcode-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .passcode-digit {
+            width: 55px;
+            height: 65px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: #5E8B2A;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .passcode-digit:focus {
+            border-color: #5E8B2A;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        /* Hide default spin arrows */
+        .passcode-digit::-webkit-outer-spin-button,
+        .passcode-digit::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            height: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-action-btn {
+            width: 100%;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #5E8B2A;
+            color: #5E8B2A;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-action-btn:hover {
+            background: #9ACB4D;
+            color: #020408;
+            box-shadow: 0 0 25px #9ACB4D;
+        }
+
+        /* ==========================================================================
+            VECTOR CORE ANCHOR
+           ========================================================================== */
+        .vector-stage-anchor {
+            position: absolute;
+            bottom: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 340px;
+            height: 480px;
+            z-index: 20;
+            will-change: transform, bottom;
+        }
+
+        svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .brand-gold { fill: #eab308; }
+        .brand-emerald { fill: #5E8B2A; }
+        .hull-dark { fill: #1e293b; }
+        .hull-light { fill: #f8fafc; }
+        .hull-shadow { fill: #e2e8f0; }
+        .hull-deep { fill: #0f172a; }
+        .glow-accent { fill: #5E8B2A; opacity: 0.9; }
+        .thruster-metallic { fill: #64748b; }
+
+        /* Multi-layered particle systems */
+        #smokeCanvas, #spaceCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        #spaceCanvas { z-index: 0; }
+        #smokeCanvas { z-index: 15; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="scene-container" id="scene">
+        <canvas id="spaceCanvas"></canvas>
+        <div class="ui-grid-overlay"></div>
+        <div id="portalFlash"></div>
+
+        <div class="secure-modal-overlay" id="secureOverrideModal">
+            <div class="secure-modal-box">
+                <h3 class="modal-headline"><span>⚠️</span> Secure Ignition</h3>
+                <p class="modal-body-text">
+                    The departure window countdown is active. Enter the secure passcode to override the timer and initiate early launch. <br><strong>(Default Code: 1234)</strong>
+                </p>
+                <div class="passcode-wrapper">
+                    <input type="number" class="passcode-digit" maxlength="1" oninput="stepPasscodeInput(this, 0)">
+                    <input type="number" class="passcode-digit" maxlength="1" oninput="stepPasscodeInput(this, 1)">
+                    <input type="number" class="passcode-digit" maxlength="1" oninput="stepPasscodeInput(this, 2)">
+                    <input type="number" class="passcode-digit" maxlength="1" oninput="stepPasscodeInput(this, 3)">
+                </div>
+                <div class="error-message" id="errorMessage">Invalid Passcode Matrix</div>
+                <button class="modal-action-btn" onclick="verifyOverrideSequence()">Engage Ignition</button>
+            </div>
+        </div>
+
+        <div class="controls-layer" id="controlsUI">
+            <div class="header-logo-panel">
+                <div class="logo-placeholder"><img src="logo.png" class="logo-corn" alt="Logo"></div>
+            </div>
+
+            <div class="header-timer-panel">
+                <div class="launch-details-content">
+                    <span class="status-badge" id="statusBadge">System Ready For Hyperjump</span>
+                    <p class="brand-statement">We are creating a fresh digital experience for premium mushroom products</p>
+                    <div id="timer">01d 20h 30m 00s</div>
+                </div>
+            </div>
+
+            <div class="header-action-panel">
+                <button class="launch-btn" id="launchTriggerBtn" onclick="openSecureIgnitionModal()">Ignite Website Launch</button>
+            </div>
+        </div>
+
+        <div class="vector-stage-anchor" id="stageAnchor">
+            <svg version="1.1" id="BioRocketAsset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" xml:space="preserve">
+                <g id="LaunchPad">
+                    <path class="hull-deep" d="M120,560 L280,560 L300,590 L100,590 Z" />
+                    <rect x="140" y="550" width="120" height="10" class="thruster-metallic" rx="3" />
+                    <line x1="100" y1="590" x2="300" y2="590" style="stroke:#5E8B2A; stroke-width:2; opacity:0.3;" />
+                </g>
+
+                <g id="rocket-image">
+                    <path class="hull-dark" d="M145,360 C110,390 100,480 115,530 C125,500 140,480 145,430 Z" />
+                    <path class="brand-emerald" d="M115,450 C105,480 110,510 115,530 C120,510 125,490 122,450 Z" />
+                    <path class="brand-gold" d="M138,400 C125,430 125,470 132,500 C135,470 140,440 138,400 Z" />
+
+                    <path class="hull-dark" d="M255,360 C290,390 300,480 285,530 C275,500 260,480 255,430 Z" />
+                    <path class="brand-emerald" d="M285,450 C295,480 290,510 285,530 C280,510 275,490 278,450 Z" />
+                    <path class="brand-gold" d="M262,400 C275,430 275,470 268,500 C265,470 260,440 262,400 Z" />
+
+                    <path class="thruster-metallic" d="M160,510 L240,510 L245,540 L155,540 Z" />
+                    <rect x="170" y="540" width="20" height="12" class="hull-deep" rx="2" />
+                    <rect x="210" y="540" width="20" height="12" class="hull-deep" rx="2" />
+                    <rect x="165" y="520" width="70" height="6" class="brand-emerald" />
+
+                    <path class="hull-light" d="M150,240 C150,240 140,360 145,510 L255,510 C260,360 250,240 250,240 Z" />
+                    <path class="hull-shadow" d="M200,240 C200,240 250,240 250,240 C250,240 260,360 255,510 L200,510 Z" />
+
+                    <path class="hull-dark" d="M196,242 L196,508 L204,508 L204,242 Z" />
+                    <path class="brand-gold" d="M174,270 C170,330 170,420 174,490 L178,490 C174,420 174,330 178,270 Z" />
+                    <path class="brand-gold" d="M226,270 C230,330 230,420 226,490 L222,490 C226,420 226,330 222,270 Z" />
+
+                    <circle cx="200" cy="310" r="22" class="hull-dark" />
+                    <circle cx="200" cy="310" r="17" class="brand-emerald" />
+                    <circle cx="194" cy="304" r="14" class="glow-accent" />
+                    <circle cx="191" cy="299" r="4" class="hull-light" opacity="0.7" />
+
+                    <circle cx="200" cy="390" r="16" class="hull-dark" />
+                    <circle cx="200" cy="390" r="12" class="brand-emerald" />
+                    <circle cx="196" cy="386" r="10" class="glow-accent" />
+
+                    <line x1="200" y1="60" x2="200" y2="110" style="stroke:#eab308; stroke-width:3;" />
+                    <circle cx="200" cy="58" r="4" class="brand-gold" />
+
+                    <path class="brand-emerald" d="M150,240 C146,190 165,110 200,110 C235,110 254,190 250,240 C225,248 175,248 150,240 Z" />
+                    
+                    <path class="glow-accent" d="M150,240 C148,205 165,130 200,110 C200,110 180,135 165,195 C158,215 150,240 150,240 Z" />
+                    
+                    <path class="hull-dark" d="M200,110 C235,110 254,190 250,240 C225,244 210,244 200,241 Z" opacity="0.25" />
+                    
+                    <path class="brand-gold" d="M150,238 C170,248 230,248 250,238 L249,244 C230,253 170,253 151,244 Z" />
+
+                    <ellipse cx="200" cy="155" rx="5" ry="12" class="hull-light" opacity="0.35" />
+                    <ellipse cx="178" cy="190" rx="4" ry="9" class="hull-light" opacity="0.3" />
+                    <ellipse cx="222" cy="190" rx="4" ry="9" class="hull-light" opacity="0.3" />
+                </g>
+            </svg>
+        </div>
+
+        <canvas id="smokeCanvas"></canvas>
+    </div>
+
+    <script>
+        // --- 1. DYNAMIC SYSTEM COUNTDOWN ---
+        const launchTargetDate = new Date().getTime() + (1 * 24 * 60 * 60 * 1000) + (20 * 60 * 60 * 1000) + (30 * 60 * 1000);
+        let standardCountdownInterval;
+        let isOverriddenCountdownActive = false;
+
+        function updateCountdownDisplay() {
+            if (isOverriddenCountdownActive) return;
+
+            const now = new Date().getTime();
+            const distance = launchTargetDate - now;
+
+            if (distance < 0) {
+                document.getElementById("timer").innerHTML = "00d 00h 00m 00s";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("timer").innerHTML = 
+                `${String(days).padStart(2, '0')}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+        }
+        standardCountdownInterval = setInterval(updateCountdownDisplay, 1000);
+        updateCountdownDisplay();
+
+        // --- 2. CANVAS STARFIELD MATRIX ---
+        const spaceCanvas = document.getElementById('spaceCanvas');
+        const sCtx = spaceCanvas.getContext('2d');
+        let stars = [];
+        let warpSpeed = 0.5;
+
+        function resizeSpaceCanvas() {
+            spaceCanvas.width = window.innerWidth;
+            spaceCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeSpaceCanvas);
+        resizeSpaceCanvas();
+
+        for(let i = 0; i < 150; i++) {
+            stars.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                size: Math.random() * 1.5 + 0.5,
+                speed: Math.random() * 0.5 + 0.1
+            });
+        }
+
+        function drawStarfield() {
+            sCtx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
+            sCtx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            for(let i = 0; i < stars.length; i++) {
+                let star = stars[i];
+                sCtx.beginPath();
+                sCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                sCtx.fill();
+                
+                star.y += star.speed * warpSpeed;
+                if(star.y > spaceCanvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * spaceCanvas.width;
+                }
+            }
+            requestAnimationFrame(drawStarfield);
+        }
+        drawStarfield();
+
+        // --- 3. GSAP IDLE BASELINE ENGINE ---
+        var tlIdle = new TimelineMax({ repeat: -1 });
+        tlIdle.set("#rocket-image", { transformOrigin: "50% 80%" })
+             .fromTo("#rocket-image", 0.2, { x: -0.5, y: -0.2 }, { x: 0.5, y: 0.2, repeat: -1, yoyo: true });
+
+        // --- 4. VOLUMETRIC SMOKE / PARTICLE ENGINE ---
+        const masterScene = document.getElementById('scene');
+        const controlsUI = document.getElementById('controlsUI');
+        const stageAnchor = document.getElementById('stageAnchor');
+        const canvas = document.getElementById('smokeCanvas');
+        const ctx = canvas.getContext('2d');
+        const flashOverlay = document.getElementById('portalFlash');
+
+        let smokeParticles = [];
+        let fireParticles = [];
+        
+        let launchStarted = false;
+        let animationTriggered = false;
+        let countdownSeconds = 3; 
+
+        let currentBottomPosition = 40;
+        let velocityY = 0;
+        let accelerationY = 0.15; 
+        let smokeSpeedMultiplier = 1;
+        let currentScreenShakeIntensity = 0;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class ProWarpParticle {
+            constructor(x, y, type = 'smoke') {
+                this.type = type;
+                this.x = x + (Math.random() * 40 - 20);
+                this.y = y + (Math.random() * 10 - 5);
+                
+                if (type === 'fire') {
+                    this.radius = Math.random() * 20 + 15;
+                    this.maxRadius = Math.random() * 60 + 40;
+                    this.vx = Math.random() * 4 - 2;
+                    this.vy = Math.random() * 8 + 8;
+                    this.baseColor = Math.random() > 0.4 ? 'rgba(16, 185, 129,' : 'rgba(234, 179, 8,';
+                    this.alpha = 0.9;
+                    this.growth = 2;
+                    this.fade = 0.025;
+                } else {
+                    this.radius = Math.random() * 15 + 10;
+                    this.maxRadius = Math.random() * 280 + 150;
+                    this.vx = Math.random() * 14 - 7;
+                    this.vy = Math.random() * -2 - 1;
+                    const colors = ['rgba(248,250,252,', 'rgba(203,213,225,', 'rgba(16,185,129,', 'rgba(15,23,42,'];
+                    this.baseColor = colors[Math.floor(Math.random() * colors.length)];
+                    this.alpha = 0.6;
+                    this.growth = 5;
+                    this.fade = 0.0035;
+                }
+            }
+
+            update() {
+                this.x += this.vx * smokeSpeedMultiplier;
+                this.y += this.vy * smokeSpeedMultiplier;
+                if (this.radius < this.maxRadius) {
+                    this.radius += this.growth * smokeSpeedMultiplier;
+                }
+                this.alpha -= this.fade * smokeSpeedMultiplier;
+            }
+
+            draw() {
+                ctx.beginPath();
+                let gradient = ctx.createRadialGradient(this.x, this.y, this.radius * 0.01, this.x, this.y, this.radius);
+                gradient.addColorStop(0, this.baseColor + this.alpha + ')');
+                gradient.addColorStop(0.2, this.baseColor + (this.alpha * 0.5) + ')');
+                gradient.addColorStop(1, this.baseColor + '0)');
+                ctx.fillStyle = gradient;
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function runFrameCycle() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const rect = stageAnchor.getBoundingClientRect();
+            const nozzleX = rect.left + (rect.width / 2);
+            const nozzleY = rect.bottom - 25;
+
+            if (launchStarted) {
+                if (rect.bottom > -200) {
+                    for (let i = 0; i < 7; i++) {
+                        fireParticles.push(new ProWarpParticle(nozzleX, nozzleY, 'fire'));
+                    }
+                    for (let i = 0; i < 12; i++) {
+                        smokeParticles.push(new ProWarpParticle(nozzleX, nozzleY, 'smoke'));
+                    }
+                }
+                
+                if (currentScreenShakeIntensity > 0) {
+                    let shakeX = (Math.random() - 0.5) * currentScreenShakeIntensity;
+                    let shakeY = (Math.random() - 0.5) * currentScreenShakeIntensity;
+                    masterScene.style.transform = `translate(${shakeX}px, ${shakeY}px)`;
+                }
+            }
+
+            if (launchStarted && countdownSeconds <= 0) {
+                velocityY += accelerationY;
+                accelerationY += 0.05;
+                currentBottomPosition += velocityY;
+                stageAnchor.style.bottom = currentBottomPosition + 'px';
+
+                let scaleFactor = Math.max(0.05, 1 - (velocityY * 0.004));
+                stageAnchor.style.transform = `translateX(-50%) scale(${scaleFactor})`;
+            }
+
+            for (let i = smokeParticles.length - 1; i >= 0; i--) {
+                smokeParticles[i].update();
+                smokeParticles[i].draw();
+                if (smokeParticles[i].alpha <= 0) {
+                    smokeParticles.splice(i, 1);
+                }
+            }
+
+            ctx.globalCompositeOperation = 'screen';
+            for (let i = fireParticles.length - 1; i >= 0; i--) {
+                fireParticles[i].update();
+                fireParticles[i].draw();
+                if (fireParticles[i].alpha <= 0) {
+                    fireParticles.splice(i, 1);
+                }
+            }
+            ctx.globalCompositeOperation = 'source-over';
+
+            if (launchStarted && countdownSeconds <= 0 && rect.bottom <= 0 && !animationTriggered) {
+                animationTriggered = true;
+                currentScreenShakeIntensity = 0;
+                masterScene.style.transform = 'translate(0px, 0px)';
+
+                TweenMax.to(flashOverlay, 0.8, {
+                    opacity: 1,
+                    ease: Power3.easeIn,
+                    onComplete: function () {
+                        window.location.href = 'https://stg.meenamushroom.com/';
+                    }
+                });
+            }
+
+            requestAnimationFrame(runFrameCycle);
+        }
+        runFrameCycle();
+
+        // --- 5. SECURE INTERACTION MODAL CONSOLE ---
+        const modal = document.getElementById('secureOverrideModal');
+        const digits = document.querySelectorAll('.passcode-digit');
+        const errorMsg = document.getElementById('errorMessage');
+
+        function openSecureIgnitionModal() {
+            modal.classList.add('active');
+            digits[0].focus();
+        }
+
+        function stepPasscodeInput(input, index) {
+            if (input.value.length > 1) input.value = input.value.slice(0, 1);
+            if (input.value !== "" && index < 3) {
+                digits[index + 1].focus();
+            }
+        }
+
+        function verifyOverrideSequence() {
+            let compiledCode = "";
+            digits.forEach(input => compiledCode += input.value);
+
+            if (compiledCode === "1234") {
+                errorMsg.style.opacity = "0";
+                modal.classList.remove('active');
+                initiateTerminalCountdown();
+            } else {
+                errorMsg.style.opacity = "1";
+                TweenMax.fromTo(".passcode-wrapper", 0.05, {x:-10}, {x:10, repeat:5, yoyo:true, onComplete: () => {
+                    digits.forEach(input => input.value = "");
+                    digits[0].focus();
+                }});
+            }
+        }
+
+        function initiateTerminalCountdown() {
+            isOverriddenCountdownActive = true;
+            clearInterval(standardCountdownInterval);
+
+            let remainingTime = 10;
+            const timerDisplay = document.getElementById('timer');
+            const statusBadge = document.getElementById('statusBadge');
+
+            statusBadge.innerText = "SECURITY OVERRIDE ACTIVE";
+            statusBadge.style.color = "#ef4444";
+            timerDisplay.innerHTML = "10s";
+
+            const criticalClock = setInterval(() => {
+                remainingTime--;
+                timerDisplay.innerHTML = String(remainingTime).padStart(2, '0') + "s";
+
+                if (remainingTime <= 3) {
+                    if (currentScreenShakeIntensity < 4) currentScreenShakeIntensity += 2;
+                }
+
+                if (remainingTime <= 0) {
+                    clearInterval(criticalClock);
+                    executeManualLaunchSequence();
+                }
+            }, 1000);
+        }
+
+        // --- 6. CORE FLIGHT ENGINE CONFIGURATION ---
+        function executeManualLaunchSequence() {
+            document.getElementById('launchTriggerBtn').disabled = true;
+            document.getElementById('launchTriggerBtn').style.opacity = '0.2';
+
+            launchStarted = true;
+            controlsUI.style.opacity = '0';
+            controlsUI.style.transform = 'translateY(-30px)';
+
+            tlIdle.clear();
+            var powerShake = new TimelineMax({ repeat: -1 });
+            powerShake.set("#rocket-image", { transformOrigin: "50% 85%" })
+                       .fromTo("#rocket-image", 0.01, { x: -8, y: -3 }, { x: 8, y: 3, repeat: -1, yoyo: true });
+
+            const launchSequenceClock = setInterval(() => {
+                countdownSeconds--;
+                if (currentScreenShakeIntensity < 25) {
+                    currentScreenShakeIntensity += 8;
+                }
+                
+                if (countdownSeconds <= 0) {
+                    clearInterval(launchSequenceClock);
+                    
+                    const dynamicSpeedCurve = setInterval(() => {
+                        smokeSpeedMultiplier += 0.5;
+                        warpSpeed += 4;
+                        if(warpSpeed > 60) clearInterval(dynamicSpeedCurve);
+                    }, 80);
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>
