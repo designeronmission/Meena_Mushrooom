@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mushroom Village - Premium Quantum Launch</title>
+    <title>Meena Mushroom Website Launch</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Orbitron:500,700,900&display=swap" rel="stylesheet">
 
@@ -25,7 +25,7 @@
         }
 
         .logo-corn {
-            width: 140px;
+            width: 230px;
             filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));
         }
 
@@ -113,11 +113,11 @@
             flex-direction: column;
             align-items: center;
             gap: 15px;
-            padding: 25px 40px;
+            padding: 5px 30px;
             border-radius: 16px;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
             transform: translateY(20px);
         }
@@ -440,19 +440,19 @@
 
         <div class="controls-layer" id="controlsUI">
             <div class="header-logo-panel">
-                <div class="logo-placeholder"><img src="logo.png" class="logo-corn" alt="Logo"></div>
+                <div class="logo-placeholder"><img src="logo-white.png" class="logo-corn" alt="Logo"></div>
             </div>
 
             <div class="header-timer-panel">
                 <div class="launch-details-content">
                     <span class="status-badge" id="statusBadge">System Ready For Hyperjump</span>
                     <p class="brand-statement">We are creating a fresh digital experience for premium mushroom products</p>
-                    <div id="timer">01d 20h 30m 00s</div>
+                    <div id="timer">00d 00h 00m 00s</div>
                 </div>
             </div>
 
             <div class="header-action-panel">
-                <button class="launch-btn" id="launchTriggerBtn" onclick="openSecureIgnitionModal()">Ignite Website Launch</button>
+                <button class="launch-btn" id="launchTriggerBtn" onclick="openSecureIgnitionModal()" onmouseenter="playBeep(440, 'sine', 0.05, 0.05)">Ignite Website Launch</button>
             </div>
         </div>
 
@@ -516,8 +516,126 @@
     </div>
 
     <script>
+        // --- AUDIO ENGINE (WEB AUDIO & SPEECH SYNTHESIS API) ---
+        let audioCtx = null;
+        let engineRumbleGain = null;
+        let crackleThrustGain = null;
+        let lowPassFilterNode = null;
+        let highPassFilterNode = null;
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playBeep(freq, type, duration, volume) {
+            try {
+                initAudioContext();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = type || 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(volume || 0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) { console.log("Audio not allowed yet"); }
+        }
+
+        function speakNumber(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1.05; 
+                utterance.pitch = 0.85; 
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playRocketEngineSound() {
+            initAudioContext();
+
+            const sampleRate = audioCtx.sampleRate;
+            const bufferSize = 2 * sampleRate;
+            
+            // Generate deep structural Brown Noise Buffer
+            const brownBuffer = audioCtx.createBuffer(1, bufferSize, sampleRate);
+            const brownData = brownBuffer.getChannelData(0);
+            let lastOut = 0.0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                brownData[i] = (lastOut + (0.02 * white)) / 1.02;
+                lastOut = brownData[i];
+                brownData[i] *= 5.5; // High output gain multiplication
+            }
+
+            // Generate crisp White Noise Buffer for mechanical flame crackling textures
+            const whiteBuffer = audioCtx.createBuffer(1, bufferSize, sampleRate);
+            const whiteData = whiteBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                // Random absolute mathematical clipping creates realistic detonation micro-pops
+                whiteData[i] = (Math.random() * 2 - 1) * (Math.random() > 0.88 ? 1.4 : 0.2);
+            }
+
+            // --- LAYER 1: Deep Room-Shaking Base Thrust ---
+            const brownSource = audioCtx.createBufferSource();
+            brownSource.buffer = brownBuffer;
+            brownSource.loop = true;
+
+            lowPassFilterNode = audioCtx.createBiquadFilter();
+            lowPassFilterNode.type = 'lowpass';
+            lowPassFilterNode.frequency.setValueAtTime(110, audioCtx.currentTime);
+
+            engineRumbleGain = audioCtx.createGain();
+            engineRumbleGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            // Over-amplify baseline curve to ensure heavy subwoofer activation
+            engineRumbleGain.gain.linearRampToValueAtTime(3.5, audioCtx.currentTime + 3.0);
+
+            brownSource.connect(lowPassFilterNode);
+            lowPassFilterNode.connect(engineRumbleGain);
+            engineRumbleGain.connect(audioCtx.destination);
+            brownSource.start();
+
+            // --- LAYER 2: Aggressive Tearing Atmospheric Crackle ---
+            const whiteSource = audioCtx.createBufferSource();
+            whiteSource.buffer = whiteBuffer;
+            whiteSource.loop = true;
+
+            highPassFilterNode = audioCtx.createBiquadFilter();
+            highPassFilterNode.type = 'bandpass';
+            highPassFilterNode.frequency.setValueAtTime(180, audioCtx.currentTime);
+            highPassFilterNode.Q.setValueAtTime(2.0, audioCtx.currentTime);
+
+            crackleThrustGain = audioCtx.createGain();
+            crackleThrustGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+            crackleThrustGain.gain.linearRampToValueAtTime(2.8, audioCtx.currentTime + 2.8);
+
+            whiteSource.connect(highPassFilterNode);
+            highPassFilterNode.connect(crackleThrustGain);
+            crackleThrustGain.connect(audioCtx.destination);
+            whiteSource.start();
+        }
+
+        function fadeOutRocketSound() {
+            if (audioCtx) {
+                const fadeDuration = 0.6;
+                if (engineRumbleGain) {
+                    engineRumbleGain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + fadeDuration);
+                }
+                if (crackleThrustGain) {
+                    crackleThrustGain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + fadeDuration);
+                }
+            }
+        }
+
         // --- 1. DYNAMIC SYSTEM COUNTDOWN ---
-        const launchTargetDate = new Date().getTime() + (1 * 24 * 60 * 60 * 1000) + (20 * 60 * 60 * 1000) + (30 * 60 * 1000);
+        const launchTargetDate = new Date('May 31, 2026 11:11:00').getTime();
         let standardCountdownInterval;
         let isOverriddenCountdownActive = false;
 
@@ -529,6 +647,8 @@
 
             if (distance < 0) {
                 document.getElementById("timer").innerHTML = "00d 00h 00m 00s";
+                clearInterval(standardCountdownInterval);
+                executeManualLaunchSequence(); 
                 return;
             }
 
@@ -698,6 +818,18 @@
 
                 let scaleFactor = Math.max(0.05, 1 - (velocityY * 0.004));
                 stageAnchor.style.transform = `translateX(-50%) scale(${scaleFactor})`;
+
+                // DYNAMIC SOUND TRANSITION: Open up acoustic frequencies as velocity increases
+                if (audioCtx) {
+                    if (lowPassFilterNode) {
+                        let targetLowFreq = 110 + (velocityY * 3.5);
+                        lowPassFilterNode.frequency.setValueAtTime(Math.min(targetLowFreq, 700), audioCtx.currentTime);
+                    }
+                    if (highPassFilterNode) {
+                        let targetHighFreq = 180 + (velocityY * 6.0);
+                        highPassFilterNode.frequency.setValueAtTime(Math.min(targetHighFreq, 1800), audioCtx.currentTime);
+                    }
+                }
             }
 
             for (let i = smokeParticles.length - 1; i >= 0; i--) {
@@ -722,6 +854,8 @@
                 animationTriggered = true;
                 currentScreenShakeIntensity = 0;
                 masterScene.style.transform = 'translate(0px, 0px)';
+                fadeOutRocketSound();
+                playBeep(880, 'sine', 0.5, 0.15); // End warp boom/flash tone
 
                 TweenMax.to(flashOverlay, 0.8, {
                     opacity: 1,
@@ -742,11 +876,13 @@
         const errorMsg = document.getElementById('errorMessage');
 
         function openSecureIgnitionModal() {
+            playBeep(523.25, 'sine', 0.1, 0.1); 
             modal.classList.add('active');
             digits[0].focus();
         }
 
         function stepPasscodeInput(input, index) {
+            playBeep(600, 'sine', 0.03, 0.08); 
             if (input.value.length > 1) input.value = input.value.slice(0, 1);
             if (input.value !== "" && index < 3) {
                 digits[index + 1].focus();
@@ -758,10 +894,14 @@
             digits.forEach(input => compiledCode += input.value);
 
             if (compiledCode === "1234") {
+                playBeep(587.33, 'triangle', 0.1, 0.1);
+                setTimeout(() => playBeep(880, 'triangle', 0.3, 0.1), 80);
+                
                 errorMsg.style.opacity = "0";
                 modal.classList.remove('active');
                 initiateTerminalCountdown();
             } else {
+                playBeep(120, 'sawtooth', 0.3, 0.2);
                 errorMsg.style.opacity = "1";
                 TweenMax.fromTo(".passcode-wrapper", 0.05, {x:-10}, {x:10, repeat:5, yoyo:true, onComplete: () => {
                     digits.forEach(input => input.value = "");
@@ -781,10 +921,22 @@
             statusBadge.innerText = "SECURITY OVERRIDE ACTIVE";
             statusBadge.style.color = "#ef4444";
             timerDisplay.innerHTML = "10s";
+            
+            speakNumber("Ten");
 
             const criticalClock = setInterval(() => {
                 remainingTime--;
                 timerDisplay.innerHTML = String(remainingTime).padStart(2, '0') + "s";
+
+                if (remainingTime === 9) { speakNumber("Nine"); playBeep(350, 'sine', 0.08, 0.1); }
+                if (remainingTime === 8) { speakNumber("Eight"); playBeep(350, 'sine', 0.08, 0.1); }
+                if (remainingTime === 7) { speakNumber("Seven"); playBeep(350, 'sine', 0.08, 0.1); }
+                if (remainingTime === 6) { speakNumber("Six"); playBeep(350, 'sine', 0.08, 0.1); }
+                if (remainingTime === 5) { speakNumber("Five"); playBeep(350, 'sine', 0.08, 0.1); }
+                if (remainingTime === 4) { speakNumber("Four"); playBeep(350, 'sine', 0.08, 0.1); }
+                if (remainingTime === 3) { speakNumber("Three"); playBeep(493.88, 'sine', 0.12, 0.15); }
+                if (remainingTime === 2) { speakNumber("Two"); playBeep(493.88, 'sine', 0.12, 0.15); }
+                if (remainingTime === 1) { speakNumber("One"); playBeep(493.88, 'sine', 0.12, 0.15); }
 
                 if (remainingTime <= 3) {
                     if (currentScreenShakeIntensity < 4) currentScreenShakeIntensity += 2;
@@ -792,6 +944,7 @@
 
                 if (remainingTime <= 0) {
                     clearInterval(criticalClock);
+                    speakNumber("Ignition");
                     executeManualLaunchSequence();
                 }
             }, 1000);
@@ -805,6 +958,9 @@
             launchStarted = true;
             controlsUI.style.opacity = '0';
             controlsUI.style.transform = 'translateY(-30px)';
+            
+            // Trigger the redesigned maximum volume thrust rumble
+            playRocketEngineSound();
 
             tlIdle.clear();
             var powerShake = new TimelineMax({ repeat: -1 });
