@@ -142,7 +142,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
-            margin-top: 5px;
+            margin-top: 35px;
         }
 
         .launch-details-content {
@@ -163,7 +163,7 @@
             justify-content: center;
             gap: 8px;
         }
-
+  
         .status-badge::before {
             content: '';
             display: inline-block;
@@ -187,7 +187,7 @@
         .url-highlight {
             font-family: 'Orbitron', sans-serif;
             color: #ffffff;
-            font-size: 20px;
+            font-size: 15px;
             font-weight: 700;
             letter-spacing: 1px;
             text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
@@ -561,10 +561,10 @@
             to { opacity: 1; }
         }
     </style>
+    
 </head>
 
 <body>
-
     <div class="scene-container" id="scene">
         <canvas id="spaceCanvas"></canvas>
         <div class="ui-grid-overlay"></div>
@@ -594,9 +594,7 @@
 
             <div class="header-timer-panel">
                 <div class="launch-details-content">
-                    <span class="status-badge" id="statusBadge">Meena Mushroom Farm</span>
-                    <p class="brand-statement">We are excited to announce the launch of our official website:</p>
-                    <div class="url-highlight">Countdown Timer Will Be Displayed Here</div>
+                    <div class="url-highlight">We are excited to announce the launch of our official website:</div>
                     <div id="timer">00d 00h 00m 00s</div>
                 </div>
             </div>
