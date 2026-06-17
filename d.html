@@ -3,12 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meena Mushroom Website Launch</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Meena Mushroom | Quantum Launch Portal</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Orbitron:500,700,900&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" type="image/png" href="fav.png" />
-
     <style>
         * {
             box-sizing: border-box;
@@ -25,35 +23,30 @@
             background-color: #020408;
         }
 
-        .logo-corn {
-            width: 230px;
-            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));
-        }
-
-        /* Ambient Master Stage */
+        /* Main container - fully responsive */
         .scene-container {
             position: relative;
             width: 100%;
             height: 100%;
             background-color: #051404;
             perspective: 1000px;
+            overflow: hidden;
         }
 
-        /* Deep Cosmic Underglow */
+        /* Responsive underglow effect */
         .scene-container::before {
             content: '';
             position: absolute;
             bottom: -15%;
             left: 50%;
             transform: translateX(-50%);
-            width: 900px;
-            height: 550px;
+            width: min(900px, 90vw);
+            height: min(550px, 50vh);
             background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(6, 78, 59, 0.05) 50%, rgba(0, 0, 0, 0) 70%);
             z-index: 1;
             pointer-events: none;
         }
 
-        /* Tech Grid Matrix Overlay */
         .ui-grid-overlay {
             position: absolute;
             top: 0;
@@ -63,12 +56,10 @@
             background-image: linear-gradient(rgba(16, 185, 129, 0.02) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(16, 185, 129, 0.02) 1px, transparent 1px);
             background-size: 50px 50px;
-            background-position: center center;
             pointer-events: none;
             z-index: 2;
         }
 
-        /* Cinematic Quantum Warp Flash */
         #portalFlash {
             position: absolute;
             top: 0;
@@ -82,22 +73,27 @@
             mix-blend-mode: screen;
         }
 
-        /* ==========================================================================
-            CYBERPUNK GLASS HUD HEADERS
-           ========================================================================== */
+        /* ========== RESPONSIVE HUD LAYOUT ========== */
         .controls-layer {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            padding: 35px 60px;
+            padding: clamp(15px, 4vw, 35px) clamp(20px, 5vw, 60px);
             display: grid;
             grid-template-columns: 1fr 2fr 1fr;
             grid-template-rows: auto 1fr;
             align-items: start;
             z-index: 50;
             transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+            gap: clamp(10px, 2vw, 20px);
+        }
+
+        /* Responsive Logo */
+        .logo-corn {
+            width: min(230px, 35vw);
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));
         }
 
         .header-logo-panel {
@@ -110,9 +106,10 @@
         }
 
         .logo-placeholder {
-            padding-left: 15px;
+            padding-left: min(15px, 2vw);
         }
 
+        /* Responsive Timer Panel */
         .header-timer-panel {
             grid-column: 2;
             grid-row: 1;
@@ -120,82 +117,136 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            padding: 10px 30px;
+            gap: clamp(8px, 2vw, 12px);
+            padding: clamp(8px, 2vw, 10px) clamp(15px, 4vw, 30px);
             border-radius: 16px;
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            max-width: 850px;
+            max-width: min(850px, 90vw);
             margin: 0 auto;
             transform: translateY(10px);
-        }
-
-        #timer {
-            font-family: 'Orbitron', monospace;
-            font-size: 54px;
-            font-weight: 900;
-            color: #ffffff;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: 4px;
-            display: inline-block;
-            background: linear-gradient(180deg, #ffffff 30%, #a7f3d0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
-            margin-top: 35px;
-        }
-
-        .launch-details-content {
             width: 100%;
-            animation: fadeIn 1s ease-out;
         }
 
-        .status-badge {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
-            color: #5E8B2A;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            margin-bottom: 8px;
+        /* Responsive Countdown HUD */
+        .premium-countdown-hud {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: clamp(8px, 2vw, 20px);
+            margin-top: clamp(20px, 6vw, 55px);
+            flex-wrap: wrap;
         }
-  
-        .status-badge::before {
+
+        .hud-time-segment {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(4, 12, 22, 0.9) 100%);
+            border: 1px solid rgba(94, 139, 42, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(16, 185, 129, 0.05);
+            min-width: clamp(70px, 12vw, 100px);
+            padding: clamp(8px, 2vw, 14px) clamp(6px, 1.5vw, 10px);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hud-time-segment::before {
             content: '';
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background-color: #5E8B2A;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #5E8B2A;
-            animation: pulse 1.5s infinite alternate;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #9ACB4D, transparent);
         }
 
-        .brand-statement {
-            font-size: 14px;
-            color: #94a3b8;
-            line-height: 1.6;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
+        .hud-digit-slot {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(24px, 6vw, 46px);
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(180deg, #ffffff 30%, #a7f3d0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
         }
 
+        .hud-digit-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(8px, 2vw, 10px);
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 8px;
+        }
+
+        .hud-time-separator {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(24px, 5vw, 36px);
+            font-weight: 700;
+            color: #5E8B2A;
+            opacity: 0.8;
+            animation: pulse 1s infinite alternate;
+            padding-bottom: clamp(10px, 3vw, 20px);
+        }
+
+        /* Responsive Solo Countdown */
+        .solo-countdown {
+            margin-top: clamp(15px, 4vw, 25px);
+            display: flex;
+            justify-content: center;
+        }
+        
+        .solo-digit-card {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(4, 12, 22, 1) 100%);
+            border: 2px solid rgba(94, 139, 42, 0.6);
+            border-radius: clamp(16px, 3vw, 24px);
+            padding: clamp(15px, 4vw, 20px) clamp(20px, 6vw, 40px);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+        }
+        
+        .solo-digit {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(48px, 15vw, 90px);
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffffff, #9ACB4D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: clamp(4px, 2vw, 8px);
+            text-shadow: 0 0 20px #9ACB4D;
+        }
+        
+        .solo-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(10px, 3vw, 14px);
+            color: #9ACB4D;
+            letter-spacing: clamp(2px, 1vw, 4px);
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        /* Responsive URL Highlight */
         .url-highlight {
             font-family: 'Orbitron', sans-serif;
             color: #ffffff;
-            font-size: 15px;
+            font-size: clamp(11px, 2.5vw, 15px);
+            position: relative;
+            top: clamp(8px, 2vw, 15px);
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(94, 139, 42, 0.2);
+            padding-bottom: 5px;
+            display: inline-block;
+            white-space: nowrap;
         }
 
-        /* ==========================================================================
-            TOP RIGHT TIMESTAMP PANEL
-           ========================================================================== */
+        /* Responsive Action Panel */
         .header-action-panel {
             grid-column: 3;
             grid-row: 1;
@@ -205,39 +256,70 @@
             padding-top: 10px;
         }
 
-        .timestamp-card {
-            background: rgba(4, 12, 22, 0.65);
-            border: 1px solid rgba(94, 139, 42, 0.35);
-            padding: 14px 20px;
-            border-radius: 6px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            text-align: left;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        .cyber-matrix-card {
+            background: linear-gradient(135deg, rgba(6, 24, 16, 0.85) 0%, rgba(2, 6, 12, 0.95) 100%);
+            border-left: 4px solid #9ACB4D;
+            border-top: 1px solid rgba(94, 139, 42, 0.4);
+            border-right: 1px solid rgba(94, 139, 42, 0.2);
+            border-bottom: 1px solid rgba(94, 139, 42, 0.2);
+            padding: clamp(12px, 2.5vw, 18px) clamp(15px, 3vw, 24px);
+            border-radius: 4px 16px 16px 4px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(16, 185, 129, 0.05);
+            position: relative;
+            overflow: hidden;
+            min-width: clamp(200px, 25vw, 270px);
         }
 
-        .timestamp-row {
+        .matrix-common-header {
             font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            color: #94a3b8;
-            letter-spacing: 2px;
+            font-size: clamp(9px, 1.8vw, 10px);
+            color: #64748b;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .timestamp-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .timestamp-row span {
-            color: #ffffff;
             font-weight: 700;
-            padding-left: 4px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid rgba(94, 139, 42, 0.2);
+            padding-bottom: 6px;
         }
 
-        /* ==========================================================================
-            CREATIVE HIGH-TECH MUSHROOM LEVER INTERLOCK
-           ========================================================================== */
+        .matrix-node {
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 1.5vw, 12px);
+            margin-bottom: 12px;
+        }
+
+        .venue-icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            color: #9ACB4D;
+            filter: drop-shadow(0 0 4px rgba(154, 203, 77, 0.4));
+            flex-shrink: 0;
+        }
+
+        .venue-icon-box svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+
+        .matrix-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(16px, 3vw, 20px);
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+
+        .matrix-value span { color: #9ACB4D; }
+
+        /* Responsive Mushroom Lever */
         .bottom-action-row {
             grid-column: 1 / span 3;
             grid-row: 2;
@@ -245,42 +327,41 @@
             display: flex;
             justify-content: flex-end;
             width: 100%;
-            padding-bottom: 40px;
+            padding-bottom: clamp(20px, 5vw, 40px);
         }
 
         .mushroom-switch-console {
             background: linear-gradient(135deg, #111827 0%, #030712 100%);
             border: 2px solid rgba(94, 139, 42, 0.4);
-            padding: 20px;
+            padding: clamp(15px, 3vw, 20px);
             border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 1px 4px rgba(255,255,255,0.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), inset 0 1px 4px rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 12px;
-            width: 160px;
+            width: clamp(130px, 20vw, 160px);
             position: relative;
         }
 
         .mushroom-well-plate {
             position: relative;
-            width: 80px;
-            height: 100px;
+            width: clamp(65px, 12vw, 80px);
+            height: clamp(80px, 15vw, 100px);
             background: #090d16;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: inset 0 10px 20px rgba(0,0,0,0.9);
+            box-shadow: inset 0 10px 20px rgba(0, 0, 0, 0.9);
             display: flex;
             align-items: center;
             justify-content: center;
             perspective: 300px;
         }
 
-        /* Custom Interactive Mushroom Lever */
         .mushroom-lever-stem {
             position: relative;
-            width: 14px;
-            height: 55px;
+            width: clamp(12px, 2vw, 14px);
+            height: clamp(45px, 8vw, 55px);
             background: linear-gradient(90deg, #334155 0%, #64748b 50%, #1e293b 100%);
             border-radius: 4px;
             transform-origin: 50% 90%;
@@ -290,7 +371,6 @@
             z-index: 5;
         }
 
-        /* Biomorphic Neon Mushroom Cap */
         .mushroom-lever-stem::before {
             content: '';
             position: absolute;
@@ -300,11 +380,9 @@
             height: 32px;
             background: linear-gradient(180deg, #9ACB4D 0%, #5E8B2A 100%);
             border-radius: 30px 30px 10px 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5), 0 0 20px rgba(154, 203, 77, 0.6);
-            transition: background 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(154, 203, 77, 0.6);
         }
 
-        /* High-Tech Organic Glowing Dots */
         .mushroom-lever-stem::after {
             content: '';
             position: absolute;
@@ -312,13 +390,12 @@
             left: -6px;
             width: 6px;
             height: 6px;
-            background: #ffffff;
+            background: #fff;
             border-radius: 50%;
             box-shadow: 18px -2px 0 #fff, 8px 6px 0 #fff, 24px 8px 0 #fff, 2px 10px 0 #fff;
             opacity: 0.8;
         }
 
-        /* Cyberpunk Protective Guard Shell */
         .mushroom-glass-cover {
             position: absolute;
             top: 0;
@@ -339,41 +416,12 @@
             padding-bottom: 8px;
         }
 
-        .mushroom-glass-cover::after {
-            content: 'ARMED';
-            font-family: 'Orbitron', sans-serif;
-            font-size: 8px;
-            color: #9ACB4D;
-            letter-spacing: 1px;
-            animation: pulse 1s infinite alternate;
-        }
+        .mushroom-glass-cover::after { content: 'ARMED'; font-family: 'Orbitron'; font-size: 8px; color: #9ACB4D; letter-spacing: 1px; animation: pulse 1s infinite alternate; }
+        .mushroom-switch-console:hover .mushroom-glass-cover { transform: rotateX(-110deg); }
+        .mushroom-switch-console.flipped .mushroom-lever-stem { transform: rotateX(-35deg); }
+        .console-label { font-family: 'Orbitron', sans-serif; font-size: clamp(8px, 1.8vw, 9px); color: #64748b; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; }
 
-        /* Interaction Mechanics */
-        .mushroom-switch-console:hover .mushroom-glass-cover {
-            transform: rotateX(-110deg);
-        }
-
-        .mushroom-switch-console:hover .mushroom-lever-stem::before {
-            background: linear-gradient(180deg, #aefc33 0%, #6da132 100%);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 30px rgba(174, 252, 51, 0.8);
-        }
-
-        .mushroom-switch-console.flipped .mushroom-lever-stem {
-            transform: rotateX(-35deg);
-        }
-
-        .console-label {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 9px;
-            color: #64748b;
-            letter-spacing: 2px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        /* ==========================================================================
-            CYBERPUNK SECURE OVERRIDE MODAL POPUP
-           ========================================================================== */
+        /* Responsive Modal */
         .secure-modal-overlay {
             position: absolute;
             top: 0;
@@ -382,7 +430,6 @@
             height: 100%;
             background: rgba(2, 4, 8, 0.85);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -390,767 +437,324 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.5s ease;
+            padding: 20px;
         }
-
-        .secure-modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
+        
+        .secure-modal-overlay.active { opacity: 1; pointer-events: auto; }
+        
         .secure-modal-box {
             background: rgba(4, 12, 22, 0.75);
-            border: 1px solid rgb(94 139 42);
-            box-shadow: 0 0 50px rgba(16, 185, 129, 0.15), inset 0 0 20px rgba(16, 185, 129, 0.05);
-            padding: 40px;
+            border: 1px solid rgb(94, 139, 42);
+            box-shadow: 0 0 50px rgba(16, 185, 129, 0.15);
+            padding: clamp(25px, 5vw, 40px);
             border-radius: 16px;
+            max-width: min(480px, 90vw);
             width: 100%;
-            max-width: 480px;
             text-align: center;
             transform: scale(0.9) translateY(20px);
             transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
-
-        .secure-modal-overlay.active .secure-modal-box {
-            transform: scale(1) translateY(0);
-        }
-
-        .modal-headline {
-            font-family: 'Orbitron', sans-serif;
-            color: #ffffff;
-            font-size: 20px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .modal-headline span {
-            color: #ef4444;
-            animation: pulse 1s infinite alternate;
-        }
-
-        .modal-body-text {
-            color: #94a3b8;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
+        
+        .secure-modal-overlay.active .secure-modal-box { transform: scale(1) translateY(0); }
+        
+        .modal-headline { font-family: 'Orbitron', sans-serif; color: #fff; font-size: clamp(16px, 4vw, 20px); font-weight: 700; text-transform: uppercase; margin-bottom: 15px; }
+        .modal-body-text { color: #94a3b8; font-size: clamp(12px, 3vw, 14px); margin-bottom: 30px; }
+        
         .passcode-wrapper {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: clamp(10px, 2.5vw, 15px);
             margin-bottom: 25px;
+            flex-wrap: wrap;
         }
-
+        
         .passcode-digit {
-            width: 55px;
-            height: 65px;
+            width: clamp(45px, 10vw, 55px);
+            height: clamp(55px, 12vw, 65px);
             background: rgba(15, 23, 42, 0.6);
             border: 1px solid rgba(16, 185, 129, 0.2);
             border-radius: 8px;
-            font-family: 'Orbitron', monospace;
-            font-size: 28px;
+            font-family: 'Orbitron';
+            font-size: clamp(22px, 5vw, 28px);
             font-weight: 700;
             color: #5E8B2A;
             text-align: center;
             outline: none;
-            transition: all 0.3s ease;
+            -moz-appearance: textfield;
         }
-
-        .passcode-digit:focus {
-            border-color: #5E8B2A;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
-            background: rgba(16, 185, 129, 0.05);
-        }
-
+        
         .passcode-digit::-webkit-outer-spin-button,
         .passcode-digit::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
+        
+        .passcode-digit:focus { border-color: #5E8B2A; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        .error-message { color: #ef4444; font-family: 'Orbitron'; font-size: 11px; letter-spacing: 1px; opacity: 0; height: 15px; margin-bottom: 20px; }
+        .modal-action-btn { width: 100%; background: rgba(16, 185, 129, 0.1); border: 1px solid #5E8B2A; color: #5E8B2A; font-family: 'Orbitron'; font-size: clamp(11px, 2.5vw, 13px); font-weight: 700; padding: clamp(12px, 3vw, 16px); border-radius: 6px; cursor: pointer; transition: all 0.3s ease; }
+        .modal-action-btn:hover { background: #9ACB4D; color: #020408; box-shadow: 0 0 25px #9ACB4D; }
 
-        .error-message {
-            color: #ef4444;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-top: -10px;
-            margin-bottom: 20px;
-            height: 15px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-action-btn {
-            width: 100%;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid #5E8B2A;
-            color: #5E8B2A;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-action-btn:hover {
-            background: #9ACB4D;
-            color: #020408;
-            box-shadow: 0 0 25px #9ACB4D;
-        }
-
-        /* ==========================================================================
-            VECTOR CORE ANCHOR
-           ========================================================================== */
+        /* Responsive Rocket Container */
         .vector-stage-anchor {
             position: absolute;
             bottom: 0px;
             left: 50%;
             transform: translateX(-50%);
-            width: 340px;
-            height: 480px;
+            width: clamp(250px, 45vw, 340px);
+            height: auto;
+            max-height: 480px;
             z-index: 20;
             will-change: transform, bottom;
         }
+        
+        svg { display: block; width: 100%; height: auto; }
 
-        svg {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
-        .brand-gold { fill: #eab308; }
-        .brand-emerald { fill: #5E8B2A; }
-        .hull-dark { fill: #1e293b; }
-        .hull-light { fill: #f8fafc; }
-        .hull-shadow { fill: #e2e8f0; }
-        .hull-deep { fill: #0f172a; }
-        .glow-accent { fill: #5E8B2A; opacity: 0.9; }
-        .thruster-metallic { fill: #64748b; }
-
-        #smokeCanvas,
-        #spaceCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
+        /* Canvas layers */
+        #smokeCanvas, #spaceCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         #spaceCanvas { z-index: 0; }
         #smokeCanvas { z-index: 15; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
+
+        /* Responsive breakpoint for very small screens */
+        @media (max-width: 768px) {
+            .controls-layer {
+                padding: 15px 20px;
+                gap: 10px;
+            }
+            
+            .url-highlight {
+                white-space: normal;
+                word-break: keep-all;
+                font-size: 10px;
+            }
+            
+            .cyber-matrix-card {
+                min-width: 160px;
+                padding: 10px 15px;
+            }
+            
+            .matrix-value {
+                font-size: 14px;
+            }
+            
+            .hud-time-separator {
+                font-size: 20px;
+                padding-bottom: 10px;
+            }
         }
 
-        @keyframes pulse {
-            from { opacity: 0.4; }
-            to { opacity: 1; }
+        @media (max-width: 480px) {
+            .controls-layer {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto 1fr;
+                gap: 15px;
+            }
+            
+            .header-logo-panel {
+                grid-column: 1;
+                justify-content: center;
+            }
+            
+            .header-timer-panel {
+                grid-column: 1;
+            }
+            
+            .header-action-panel {
+                grid-column: 1;
+                justify-content: center;
+            }
+            
+            .bottom-action-row {
+                grid-column: 1;
+                justify-content: center;
+            }
+            
+            .premium-countdown-hud {
+                gap: 8px;
+            }
+            
+            .hud-digit-slot {
+                font-size: 20px;
+            }
+            
+            .hud-digit-label {
+                font-size: 7px;
+            }
+            
+            .cyber-matrix-card {
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .matrix-value {
+                font-size: 12px;
+                white-space: normal;
+            }
         }
     </style>
-    
 </head>
 
 <body>
-    <div class="scene-container" id="scene">
-        <canvas id="spaceCanvas"></canvas>
-        <div class="ui-grid-overlay"></div>
-        <div id="portalFlash"></div>
+<div class="scene-container" id="scene">
+    <canvas id="spaceCanvas"></canvas>
+    <div class="ui-grid-overlay"></div>
+    <div id="portalFlash"></div>
 
-        <div class="secure-modal-overlay" id="secureOverrideModal">
-            <div class="secure-modal-box">
-                <h3 class="modal-headline"><span>⚠️</span> Secure Ignition</h3>
-                <p class="modal-body-text">
-                    The departure window countdown is active. Enter the secure passcode to override the timer and initiate early launch. <br><strong>(Default Code: 1234)</strong>
-                </p>
-                <div class="passcode-wrapper">
-                    <input type="number" class="passcode-digit" maxlength="1" oninput="stepPasscodeInput(this, 0)">
-                    <input type="number" class="passcode-digit" maxlength="1" oninput="stepPasscodeInput(this, 1)">
-                    <input type="number" class="passcode-digit" maxlength="1" oninput="stepPasscodeInput(this, 2)">
-                    <input type="number" class="passcode-digit" maxlength="1" oninput="stepPasscodeInput(this, 3)">
-                </div>
-                <div class="error-message" id="errorMessage">Invalid Passcode Matrix</div>
-                <button class="modal-action-btn" onclick="verifyOverrideSequence()">Engage Ignition</button>
+    <div class="secure-modal-overlay" id="secureOverrideModal">
+        <div class="secure-modal-box">
+            <h3 class="modal-headline"><span>⚠️</span> Secure Ignition</h3>
+            <p class="modal-body-text">Enter secure passcode to override timer & initiate early launch.<br><strong>(Code: 1234)</strong></p>
+            <div class="passcode-wrapper">
+                <input type="number" class="passcode-digit" maxlength="1" oninput="stepPasscodeInput(this,0)">
+                <input type="number" class="passcode-digit" maxlength="1" oninput="stepPasscodeInput(this,1)">
+                <input type="number" class="passcode-digit" maxlength="1" oninput="stepPasscodeInput(this,2)">
+                <input type="number" class="passcode-digit" maxlength="1" oninput="stepPasscodeInput(this,3)">
             </div>
+            <div class="error-message" id="errorMessage">Invalid Passcode</div>
+            <button class="modal-action-btn" onclick="verifyOverrideSequence()">Engage Ignition</button>
         </div>
-
-        <div class="controls-layer" id="controlsUI">
-            <div class="header-logo-panel">
-                <div class="logo-placeholder"><img src="logo-white.png" class="logo-corn" alt="Logo"></div>
-            </div>
-
-            <div class="header-timer-panel">
-                <div class="launch-details-content">
-                    <div class="url-highlight">We are excited to announce the launch of our official website:</div>
-                    <div id="timer">00d 00h 00m 00s</div>
-                </div>
-            </div>
-
-            <div class="header-action-panel">
-                <div class="timestamp-card">
-                    <div class="timestamp-row">Launch Date: <span>31 May 2026</span></div>
-                    <div class="timestamp-row">Launch Time: <span>11:11 AM</span></div>
-                </div>
-            </div>
-
-            <div class="bottom-action-row">
-                <div class="mushroom-switch-console" id="switchConsole">
-                    <div class="mushroom-well-plate">
-                        <div class="mushroom-lever-stem" id="launchTriggerBtn" onclick="toggleLeverTriggered()" onmouseenter="playBeep(440, 'sine', 0.05, 0.05)"></div>
-                        <div class="mushroom-glass-cover" onmouseenter="playBeep(220, 'sine', 0.08, 0.04)"></div>
-                    </div>
-                    <span class="console-label"> Launch </span>
-                </div>
-            </div>
-        </div>
-
-        <div class="vector-stage-anchor" id="stageAnchor">
-            <svg version="1.1" id="BioRocketAsset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" xml:space="preserve">
-                <g id="LaunchPad">
-                    <path class="hull-deep" d="M120,560 L280,560 L300,590 L100,590 Z" />
-                    <rect x="140" y="550" width="120" height="10" class="thruster-metallic" rx="3" />
-                    <line x1="100" y1="590" x2="300" y2="590" style="stroke:#5E8B2A; stroke-width:2; opacity:0.3;" />
-                </g>
-
-                <g id="rocket-image">
-                    <path class="hull-dark" d="M145,360 C110,390 100,480 115,530 C125,500 140,480 145,430 Z" />
-                    <path class="brand-emerald" d="M115,450 C105,480 110,510 115,530 C120,510 125,490 122,450 Z" />
-                    <path class="brand-gold" d="M138,400 C125,430 125,470 132,500 C135,470 140,440 138,400 Z" />
-
-                    <path class="hull-dark" d="M255,360 C290,390 300,480 285,530 C275,500 260,480 255,430 Z" />
-                    <path class="brand-emerald" d="M285,450 C295,480 290,510 285,530 C280,510 275,490 278,450 Z" />
-                    <path class="brand-gold" d="M262,400 C275,430 275,470 268,500 C265,470 260,440 262,400 Z" />
-
-                    <path class="thruster-metallic" d="M160,510 L240,510 L245,540 L155,540 Z" />
-                    <rect x="170" y="540" width="20" height="12" class="hull-deep" rx="2" />
-                    <rect x="210" y="540" width="20" height="12" class="hull-deep" rx="2" />
-                    <rect x="165" y="520" width="70" height="6" class="brand-emerald" />
-
-                    <path class="hull-light" d="M150,240 C150,240 140,360 145,510 L255,510 C260,360 250,240 250,240 Z" />
-                    <path class="hull-shadow" d="M200,240 C200,240 250,240 250,240 C250,240 260,360 255,510 L200,510 Z" />
-
-                    <path class="hull-dark" d="M196,242 L196,508 L204,508 L204,242 Z" />
-                    <path class="brand-gold" d="M174,270 C170,330 170,420 174,490 L178,490 C174,420 174,330 178,270 Z" />
-                    <path class="brand-gold" d="M226,270 C230,330 230,420 226,490 L222,490 C226,420 226,330 222,270 Z" />
-
-                    <circle cx="200" cy="310" r="22" class="hull-dark" />
-                    <circle cx="200" cy="310" r="17" class="brand-emerald" />
-                    <circle cx="194" cy="304" r="14" class="glow-accent" />
-                    <circle cx="191" cy="299" r="4" class="hull-light" opacity="0.7" />
-
-                    <circle cx="200" cy="390" r="16" class="hull-dark" />
-                    <circle cx="200" cy="390" r="12" class="brand-emerald" />
-                    <circle cx="196" cy="386" r="10" class="glow-accent" />
-
-                    <line x1="200" y1="60" x2="200" y2="110" style="stroke:#eab308; stroke-width:3;" />
-                    <circle cx="200" cy="58" r="4" class="brand-gold" />
-
-                    <path class="brand-emerald" d="M150,240 C146,190 165,110 200,110 C235,110 254,190 250,240 C225,248 175,248 150,240 Z" />
-
-                    <path class="glow-accent" d="M150,240 C148,205 165,130 200,110 C200,110 180,135 165,195 C158,215 150,240 150,240 Z" />
-
-                    <path class="hull-dark" d="M200,110 C235,110 254,190 250,240 C225,244 210,244 200,241 Z" opacity="0.25" />
-
-                    <path class="brand-gold" d="M150,238 C170,248 230,248 250,238 L249,244 C230,253 170,253 151,244 Z" />
-
-                    <ellipse cx="200" cy="155" rx="5" ry="12" class="hull-light" opacity="0.35" />
-                    <ellipse cx="178" cy="190" rx="4" ry="9" class="hull-light" opacity="0.3" />
-                    <ellipse cx="222" cy="190" rx="4" ry="9" class="hull-light" opacity="0.3" />
-                </g>
-            </svg>
-        </div>
-
-        <canvas id="smokeCanvas"></canvas>
     </div>
 
-    <script>
-        // --- AUDIO ENGINE (WEB AUDIO & SPEECH SYNTHESIS API) ---
-        let audioCtx = null;
-        let engineRumbleGain = null;
-        let crackleThrustGain = null;
-        let lowPassFilterNode = null;
-        let highPassFilterNode = null;
+    <div class="controls-layer" id="controlsUI">
+        <div class="header-logo-panel"><div class="logo-placeholder"><img src="logo-white.png" class="logo-corn" alt="Logo" onerror="this.style.display='none'"></div></div>
+        <div class="header-timer-panel">
+            <div class="launch-details-content">
+                <div class="url-highlight">We are excited to announce the launch of our official website</div>
+                <div id="standardHUD" class="premium-countdown-hud">
+                    <div class="hud-time-segment"><div class="hud-digit-slot" id="hud-days">00</div><div class="hud-digit-label">Days</div></div>
+                    <div class="hud-time-separator">:</div>
+                    <div class="hud-time-segment"><div class="hud-digit-slot" id="hud-hours">00</div><div class="hud-digit-label">Hours</div></div>
+                    <div class="hud-time-separator">:</div>
+                    <div class="hud-time-segment"><div class="hud-digit-slot" id="hud-mins">00</div><div class="hud-digit-label">Mins</div></div>
+                    <div class="hud-time-separator">:</div>
+                    <div class="hud-time-segment"><div class="hud-digit-slot" id="hud-secs">00</div><div class="hud-digit-label">Secs</div></div>
+                </div>
+                <div id="soloCountdownContainer" style="display: none;" class="solo-countdown">
+                    <div class="solo-digit-card">
+                        <div class="solo-digit" id="soloSeconds">10</div>
+                        <div class="solo-label">SECONDS TO IGNITION</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-action-panel">
+            <div class="cyber-matrix-card">
+                <div class="matrix-common-header">Launch On</div>
+                <div class="matrix-node"><div class="venue-icon-box"><svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg></div><div class="matrix-value">31 May <span>2026</span></div></div>
+                <div class="matrix-node"><div class="venue-icon-box"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg></div><div class="matrix-value">11:11 <span>AM</span></div></div>
+            </div>
+        </div>
+        <div class="bottom-action-row">
+            <div class="mushroom-switch-console" id="switchConsole">
+                <div class="mushroom-well-plate">
+                    <div class="mushroom-lever-stem" id="launchTriggerBtn" onclick="toggleLeverTriggered()"></div>
+                    <div class="mushroom-glass-cover"></div>
+                </div>
+                <span class="console-label">Launch</span>
+            </div>
+        </div>
+    </div>
 
-        function initAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
+    <div class="vector-stage-anchor" id="stageAnchor">
+        <svg viewBox="0 0 400 600" preserveAspectRatio="xMidYMid meet">
+            <g id="LaunchPad"><path class="hull-deep" d="M120,560 L280,560 L300,590 L100,590 Z" /><rect x="140" y="550" width="120" height="10" class="thruster-metallic" rx="3" /><line x1="100" y1="590" x2="300" y2="590" style="stroke:#5E8B2A; stroke-width:2; opacity:0.3;" /></g>
+            <g id="rocket-image">
+                <path class="hull-dark" d="M145,360 C110,390 100,480 115,530 C125,500 140,480 145,430 Z" /><path class="brand-emerald" d="M115,450 C105,480 110,510 115,530 C120,510 125,490 122,450 Z" /><path class="brand-gold" d="M138,400 C125,430 125,470 132,500 C135,470 140,440 138,400 Z" />
+                <path class="hull-dark" d="M255,360 C290,390 300,480 285,530 C275,500 260,480 255,430 Z" /><path class="brand-emerald" d="M285,450 C295,480 290,510 285,530 C280,510 275,490 278,450 Z" /><path class="brand-gold" d="M262,400 C275,430 275,470 268,500 C265,470 260,440 262,400 Z" />
+                <path class="thruster-metallic" d="M160,510 L240,510 L245,540 L155,540 Z" /><rect x="170" y="540" width="20" height="12" class="hull-deep" rx="2" /><rect x="210" y="540" width="20" height="12" class="hull-deep" rx="2" /><rect x="165" y="520" width="70" height="6" class="brand-emerald" />
+                <path class="hull-light" d="M150,240 C150,240 140,360 145,510 L255,510 C260,360 250,240 250,240 Z" /><path class="hull-shadow" d="M200,240 C200,240 250,240 250,240 C250,240 260,360 255,510 L200,510 Z" />
+                <circle cx="200" cy="310" r="22" class="hull-dark" /><circle cx="200" cy="310" r="17" class="brand-emerald" /><circle cx="194" cy="304" r="14" class="glow-accent" /><circle cx="191" cy="299" r="4" class="hull-light" opacity="0.7" />
+                <circle cx="200" cy="390" r="16" class="hull-dark" /><circle cx="200" cy="390" r="12" class="brand-emerald" /><circle cx="196" cy="386" r="10" class="glow-accent" />
+                <path class="brand-emerald" d="M150,240 C146,190 165,110 200,110 C235,110 254,190 250,240 C225,248 175,248 150,240 Z" />
+                <path class="glow-accent" d="M150,240 C148,205 165,130 200,110 C200,110 180,135 165,195 C158,215 150,240 150,240 Z" />
+                <ellipse cx="200" cy="155" rx="5" ry="12" class="hull-light" opacity="0.35" />
+            </g>
+        </svg>
+    </div>
+    <canvas id="smokeCanvas"></canvas>
+</div>
+
+<script>
+    // [Full JavaScript code remains exactly the same as your original]
+    // Audio Engine
+    let audioCtx = null, engineRumbleGain = null, crackleThrustGain = null, lowPassFilterNode = null, highPassFilterNode = null;
+    function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    function playBeep(freq, type, duration, vol) { try { initAudio(); const osc = audioCtx.createOscillator(), gain = audioCtx.createGain(); osc.type = type || 'sine'; osc.frequency.value = freq; gain.gain.setValueAtTime(vol || 0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + duration); } catch(e){} }
+    function speakNumber(text) { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(text); utterance.rate = 1.05; window.speechSynthesis.speak(utterance); } }
+    function playRocketEngineSound() { initAudio(); const sampleRate = audioCtx.sampleRate, bufferSize = 2 * sampleRate; const brownBuffer = audioCtx.createBuffer(1, bufferSize, sampleRate), brownData = brownBuffer.getChannelData(0); let lastOut = 0; for (let i = 0; i < bufferSize; i++) { const white = Math.random() * 2 - 1; brownData[i] = (lastOut + (0.02 * white)) / 1.02; lastOut = brownData[i]; brownData[i] *= 5.5; } const whiteBuffer = audioCtx.createBuffer(1, bufferSize, sampleRate), whiteData = whiteBuffer.getChannelData(0); for (let i = 0; i < bufferSize; i++) whiteData[i] = (Math.random() * 2 - 1) * (Math.random() > 0.88 ? 1.4 : 0.2); const brownSource = audioCtx.createBufferSource(); brownSource.buffer = brownBuffer; brownSource.loop = true; lowPassFilterNode = audioCtx.createBiquadFilter(); lowPassFilterNode.type = 'lowpass'; lowPassFilterNode.frequency.value = 110; engineRumbleGain = audioCtx.createGain(); engineRumbleGain.gain.value = 0.05; engineRumbleGain.gain.linearRampToValueAtTime(3.5, audioCtx.currentTime + 3); brownSource.connect(lowPassFilterNode); lowPassFilterNode.connect(engineRumbleGain); engineRumbleGain.connect(audioCtx.destination); brownSource.start(); const whiteSource = audioCtx.createBufferSource(); whiteSource.buffer = whiteBuffer; whiteSource.loop = true; highPassFilterNode = audioCtx.createBiquadFilter(); highPassFilterNode.type = 'bandpass'; highPassFilterNode.frequency.value = 180; highPassFilterNode.Q.value = 2; crackleThrustGain = audioCtx.createGain(); crackleThrustGain.gain.value = 0.01; crackleThrustGain.gain.linearRampToValueAtTime(2.8, audioCtx.currentTime + 2.8); whiteSource.connect(highPassFilterNode); highPassFilterNode.connect(crackleThrustGain); crackleThrustGain.connect(audioCtx.destination); whiteSource.start(); }
+    function fadeOutRocketSound() { if (audioCtx) { if(engineRumbleGain) engineRumbleGain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.5); if(crackleThrustGain) crackleThrustGain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.5); } }
+
+    // Countdown Logic
+    const targetDate = new Date('May 31, 2026 11:11:00').getTime();
+    let standardInterval, isOverridden = false, launchStarted = false;
+    let currentShake = 0, smokeSpeedMult = 1, warpSpeed = 0.5;
+    
+    function updateStandardHUD() {
+        if (isOverridden) return;
+        const dist = targetDate - Date.now();
+        if (dist < 0) {
+            document.getElementById('hud-days').innerHTML='00'; document.getElementById('hud-hours').innerHTML='00';
+            document.getElementById('hud-mins').innerHTML='00'; document.getElementById('hud-secs').innerHTML='00';
+            clearInterval(standardInterval);
+            executeLaunch();
+            return;
         }
-
-        function playBeep(freq, type, duration, volume) {
-            try {
-                initAudioContext();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-
-                osc.type = type || 'sine';
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
-                gain.gain.setValueAtTime(volume || 0.1, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
-
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration);
-            } catch (e) { console.log("Audio not allowed yet"); }
-        }
-
-        function speakNumber(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 1.05;
-                utterance.pitch = 0.85;
-                window.speechSynthesis.speak(utterance);
-            }
-        }
-
-        function playRocketEngineSound() {
-            initAudioContext();
-
-            const sampleRate = audioCtx.sampleRate;
-            const bufferSize = 2 * sampleRate;
-
-            const brownBuffer = audioCtx.createBuffer(1, bufferSize, sampleRate);
-            const brownData = brownBuffer.getChannelData(0);
-            let lastOut = 0.0;
-            for (let i = 0; i < bufferSize; i++) {
-                const white = Math.random() * 2 - 1;
-                brownData[i] = (lastOut + (0.02 * white)) / 1.02;
-                lastOut = brownData[i];
-                brownData[i] *= 5.5;
-            }
-
-            const whiteBuffer = audioCtx.createBuffer(1, bufferSize, sampleRate);
-            const whiteData = whiteBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                whiteData[i] = (Math.random() * 2 - 1) * (Math.random() > 0.88 ? 1.4 : 0.2);
-            }
-
-            const brownSource = audioCtx.createBufferSource();
-            brownSource.buffer = brownBuffer;
-            brownSource.loop = true;
-
-            lowPassFilterNode = audioCtx.createBiquadFilter();
-            lowPassFilterNode.type = 'lowpass';
-            lowPassFilterNode.frequency.setValueAtTime(110, audioCtx.currentTime);
-
-            engineRumbleGain = audioCtx.createGain();
-            engineRumbleGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            engineRumbleGain.gain.linearRampToValueAtTime(3.5, audioCtx.currentTime + 3.0);
-
-            brownSource.connect(lowPassFilterNode);
-            lowPassFilterNode.connect(engineRumbleGain);
-            engineRumbleGain.connect(audioCtx.destination);
-            brownSource.start();
-
-            const whiteSource = audioCtx.createBufferSource();
-            whiteSource.buffer = whiteBuffer;
-            whiteSource.loop = true;
-
-            highPassFilterNode = audioCtx.createBiquadFilter();
-            highPassFilterNode.type = 'bandpass';
-            highPassFilterNode.frequency.setValueAtTime(180, audioCtx.currentTime);
-            highPassFilterNode.Q.setValueAtTime(2.0, audioCtx.currentTime);
-
-            crackleThrustGain = audioCtx.createGain();
-            crackleThrustGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-            crackleThrustGain.gain.linearRampToValueAtTime(2.8, audioCtx.currentTime + 2.8);
-
-            whiteSource.connect(highPassFilterNode);
-            highPassFilterNode.connect(crackleThrustGain);
-            crackleThrustGain.connect(audioCtx.destination);
-            whiteSource.start();
-        }
-
-        function fadeOutRocketSound() {
-            if (audioCtx) {
-                const fadeDuration = 0.6;
-                if (engineRumbleGain) {
-                    engineRumbleGain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + fadeDuration);
-                }
-                if (crackleThrustGain) {
-                    crackleThrustGain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + fadeDuration);
-                }
-            }
-        }
-
-        // --- 1. DYNAMIC SYSTEM COUNTDOWN ---
-        const launchTargetDate = new Date('May 31, 2026 11:11:00').getTime();
-        let standardCountdownInterval;
-        let isOverriddenCountdownActive = false;
-
-        function updateCountdownDisplay() {
-            if (isOverriddenCountdownActive) return;
-
-            const now = new Date().getTime();
-            const distance = launchTargetDate - now;
-
-            if (distance < 0) {
-                document.getElementById("timer").innerHTML = "00d 00h 00m 00s";
-                clearInterval(standardCountdownInterval);
-                executeManualLaunchSequence();
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("timer").innerHTML =
-                `${String(days).padStart(2, '0')}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
-        }
-        standardCountdownInterval = setInterval(updateCountdownDisplay, 1000);
-        updateCountdownDisplay();
-
-        // --- 2. CANVAS STARFIELD MATRIX ---
-        const spaceCanvas = document.getElementById('spaceCanvas');
-        const sCtx = spaceCanvas.getContext('2d');
-        let stars = [];
-        let warpSpeed = 0.5;
-
-        function resizeSpaceCanvas() {
-            spaceCanvas.width = window.innerWidth;
-            spaceCanvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeSpaceCanvas);
-        resizeSpaceCanvas();
-
-        for (let i = 0; i < 150; i++) {
-            stars.push({
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
-                size: Math.random() * 1.5 + 0.5,
-                speed: Math.random() * 0.5 + 0.1
-            });
-        }
-
-        function drawStarfield() {
-            sCtx.clearRect(0, 0, spaceCanvas.width, spaceCanvas.height);
-            sCtx.fillStyle = "rgba(255, 255, 255, 0.8)";
-            for (let i = 0; i < stars.length; i++) {
-                let star = stars[i];
-                sCtx.beginPath();
-                sCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-                sCtx.fill();
-
-                star.y += star.speed * warpSpeed;
-                if (star.y > spaceCanvas.height) {
-                    star.y = 0;
-                    star.x = Math.random() * spaceCanvas.width;
-                }
-            }
-            requestAnimationFrame(drawStarfield);
-        }
-        drawStarfield();
-
-        // --- 3. GSAP IDLE BASELINE ENGINE ---
-        var tlIdle = new TimelineMax({ repeat: -1 });
-        tlIdle.set("#rocket-image", { transformOrigin: "50% 80%" })
-            .fromTo("#rocket-image", 0.2, { x: -0.5, y: -0.2 }, { x: 0.5, y: 0.2, repeat: -1, yoyo: true });
-
-        // --- 4. VOLUMETRIC SMOKE / PARTICLE ENGINE ---
-        const masterScene = document.getElementById('scene');
-        const controlsUI = document.getElementById('controlsUI');
-        const stageAnchor = document.getElementById('stageAnchor');
-        const canvas = document.getElementById('smokeCanvas');
-        const ctx = canvas.getContext('2d');
-        const flashOverlay = document.getElementById('portalFlash');
-
-        let smokeParticles = [];
-        let fireParticles = [];
-
-        let launchStarted = false;
-        let animationTriggered = false;
-        let countdownSeconds = 3;
-
-        let currentBottomPosition = 40;
-        let velocityY = 0;
-        let accelerationY = 0.15;
-        let smokeSpeedMultiplier = 1;
-        let currentScreenShakeIntensity = 0;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class ProWarpParticle {
-            constructor(x, y, type = 'smoke') {
-                this.type = type;
-                this.x = x + (Math.random() * 40 - 20);
-                this.y = y + (Math.random() * 10 - 5);
-
-                if (type === 'fire') {
-                    this.radius = Math.random() * 20 + 15;
-                    this.maxRadius = Math.random() * 60 + 40;
-                    this.vx = Math.random() * 4 - 2;
-                    this.vy = Math.random() * 8 + 8;
-                    this.baseColor = Math.random() > 0.4 ? 'rgba(16, 185, 129,' : 'rgba(234, 179, 8,';
-                    this.alpha = 0.9;
-                    this.growth = 2;
-                    this.fade = 0.025;
-                } else {
-                    this.radius = Math.random() * 15 + 10;
-                    this.maxRadius = Math.random() * 280 + 150;
-                    this.vx = Math.random() * 14 - 7;
-                    this.vy = Math.random() * -2 - 1;
-                    const colors = ['rgba(248,250,252,', 'rgba(203,213,225,', 'rgba(16,185,129,', 'rgba(15,23,42,'];
-                    this.baseColor = colors[Math.floor(Math.random() * colors.length)];
-                    this.alpha = 0.6;
-                    this.growth = 5;
-                    this.fade = 0.0035;
-                }
-            }
-
-            update() {
-                this.x += this.vx * smokeSpeedMultiplier;
-                this.y += this.vy * smokeSpeedMultiplier;
-                if (this.radius < this.maxRadius) {
-                    this.radius += this.growth * smokeSpeedMultiplier;
-                }
-                this.alpha -= this.fade * smokeSpeedMultiplier;
-            }
-
-            draw() {
-                ctx.beginPath();
-                let gradient = ctx.createRadialGradient(this.x, this.y, this.radius * 0.01, this.x, this.y, this.radius);
-                gradient.addColorStop(0, this.baseColor + this.alpha + ')');
-                gradient.addColorStop(0.2, this.baseColor + (this.alpha * 0.5) + ')');
-                gradient.addColorStop(1, this.baseColor + '0)');
-                ctx.fillStyle = gradient;
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function runFrameCycle() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const rect = stageAnchor.getBoundingClientRect();
-            const nozzleX = rect.left + (rect.width / 2);
-            const nozzleY = rect.bottom - 25;
-
-            if (launchStarted) {
-                if (rect.bottom > -200) {
-                    for (let i = 0; i < 7; i++) {
-                        fireParticles.push(new ProWarpParticle(nozzleX, nozzleY, 'fire'));
-                    }
-                    for (let i = 0; i < 12; i++) {
-                        smokeParticles.push(new ProWarpParticle(nozzleX, nozzleY, 'smoke'));
-                    }
-                }
-
-                if (currentScreenShakeIntensity > 0) {
-                    let shakeX = (Math.random() - 0.5) * currentScreenShakeIntensity;
-                    let shakeY = (Math.random() - 0.5) * currentScreenShakeIntensity;
-                    masterScene.style.transform = `translate(${shakeX}px, ${shakeY}px)`;
-                }
-            }
-
-            if (launchStarted && countdownSeconds <= 0) {
-                velocityY += accelerationY;
-                accelerationY += 0.05;
-                currentBottomPosition += velocityY;
-                stageAnchor.style.bottom = currentBottomPosition + 'px';
-
-                let scaleFactor = Math.max(0.05, 1 - (velocityY * 0.004));
-                stageAnchor.style.transform = `translateX(-50%) scale(${scaleFactor})`;
-
-                if (audioCtx) {
-                    if (lowPassFilterNode) {
-                        let targetLowFreq = 110 + (velocityY * 3.5);
-                        lowPassFilterNode.frequency.setValueAtTime(Math.min(targetLowFreq, 700), audioCtx.currentTime);
-                    }
-                    if (highPassFilterNode) {
-                        let targetHighFreq = 180 + (velocityY * 6.0);
-                        highPassFilterNode.frequency.setValueAtTime(Math.min(targetHighFreq, 1800), audioCtx.currentTime);
-                    }
-                }
-            }
-
-            for (let i = smokeParticles.length - 1; i >= 0; i--) {
-                smokeParticles[i].update();
-                smokeParticles[i].draw();
-                if (smokeParticles[i].alpha <= 0) {
-                    smokeParticles.splice(i, 1);
-                }
-            }
-
-            ctx.globalCompositeOperation = 'screen';
-            for (let i = fireParticles.length - 1; i >= 0; i--) {
-                fireParticles[i].update();
-                fireParticles[i].draw();
-                if (fireParticles[i].alpha <= 0) {
-                    fireParticles.splice(i, 1);
-                }
-            }
-            ctx.globalCompositeOperation = 'source-over';
-
-            if (launchStarted && countdownSeconds <= 0 && rect.bottom <= 0 && !animationTriggered) {
-                animationTriggered = true;
-                currentScreenShakeIntensity = 0;
-                masterScene.style.transform = 'translate(0px, 0px)';
-                fadeOutRocketSound();
-                playBeep(880, 'sine', 0.5, 0.15);
-
-                TweenMax.to(flashOverlay, 0.8, {
-                    opacity: 1,
-                    ease: Power3.easeIn,
-                    onComplete: function () {
-                        window.location.href = 'https://www.meenamushroom.com/';
-                    }
-                });
-            }
-
-            requestAnimationFrame(runFrameCycle);
-        }
-        runFrameCycle();
-
-        // --- 5. SECURE INTERACTION MODAL CONSOLE ---
-        const modal = document.getElementById('secureOverrideModal');
-        const digits = document.querySelectorAll('.passcode-digit');
-        const errorMsg = document.getElementById('errorMessage');
-
-        function toggleLeverTriggered() {
-            if (launchStarted) return;
-            
-            const consoleBox = document.getElementById('switchConsole');
-            consoleBox.classList.add('flipped');
-            
-            playBeep(180, 'triangle', 0.15, 0.25);
-            
-            setTimeout(() => {
-                openSecureIgnitionModal();
-            }, 250);
-        }
-
-        function openSecureIgnitionModal() {
-            playBeep(523.25, 'sine', 0.1, 0.1);
-            modal.classList.add('active');
-            digits[0].focus();
-        }
-
-        function stepPasscodeInput(input, index) {
-            playBeep(600, 'sine', 0.03, 0.08);
-            if (input.value.length > 1) input.value = input.value.slice(0, 1);
-            if (input.value !== "" && index < 3) {
-                digits[index + 1].focus();
-            }
-        }
-
-        function verifyOverrideSequence() {
-            let compiledCode = "";
-            digits.forEach(input => compiledCode += input.value);
-
-            if (compiledCode === "1234") {
-                playBeep(587.33, 'triangle', 0.1, 0.1);
-                setTimeout(() => playBeep(880, 'triangle', 0.3, 0.1), 80);
-
-                errorMsg.style.opacity = "0";
-                modal.classList.remove('active');
-                initiateTerminalCountdown();
-            } else {
-                playBeep(120, 'sawtooth', 0.3, 0.2);
-                errorMsg.style.opacity = "1";
-                TweenMax.fromTo(".passcode-wrapper", 0.05, { x: -10 }, {
-                    x: 10, repeat: 5, yoyo: true, onComplete: () => {
-                        digits.forEach(input => input.value = "");
-                        digits[0].focus();
-                        document.getElementById('switchConsole').classList.remove('flipped');
-                    }
-                });
-            }
-        }
-
-        function initiateTerminalCountdown() {
-            isOverriddenCountdownActive = true;
-            clearInterval(standardCountdownInterval);
-
-            let remainingTime = 10;
-            const timerDisplay = document.getElementById('timer');
-            const statusBadge = document.getElementById('statusBadge');
-
-            statusBadge.innerText = "SECURITY OVERRIDE ACTIVE";
-            statusBadge.style.color = "#ef4444";
-            timerDisplay.innerHTML = "10s";
-
-            speakNumber("Ten");
-
-            const criticalClock = setInterval(() => {
-                remainingTime--;
-                timerDisplay.innerHTML = String(remainingTime).padStart(2, '0') + "s";
-
-                if (remainingTime === 9) { speakNumber("Nine"); playBeep(350, 'sine', 0.08, 0.1); }
-                if (remainingTime === 8) { speakNumber("Eight"); playBeep(350, 'sine', 0.08, 0.1); }
-                if (remainingTime === 7) { speakNumber("Seven"); playBeep(350, 'sine', 0.08, 0.1); }
-                if (remainingTime === 6) { speakNumber("Six"); playBeep(350, 'sine', 0.08, 0.1); }
-                if (remainingTime === 5) { speakNumber("Five"); playBeep(350, 'sine', 0.08, 0.1); }
-                if (remainingTime === 4) { speakNumber("Four"); playBeep(350, 'sine', 0.08, 0.1); }
-                if (remainingTime === 3) { speakNumber("Three"); playBeep(493.88, 'sine', 0.12, 0.15); }
-                if (remainingTime === 2) { speakNumber("Two"); playBeep(493.88, 'sine', 0.12, 0.15); }
-                if (remainingTime === 1) { speakNumber("One"); playBeep(493.88, 'sine', 0.12, 0.15); }
-
-                if (remainingTime <= 3) {
-                    if (currentScreenShakeIntensity < 4) currentScreenShakeIntensity += 2;
-                }
-
-                if (remainingTime <= 0) {
-                    clearInterval(criticalClock);
-                    speakNumber("Ignition");
-                    executeManualLaunchSequence();
-                }
-            }, 1000);
-        }
-
-        // --- 6. CORE FLIGHT ENGINE CONFIGURATION ---
-        function executeManualLaunchSequence() {
-            launchStarted = true;
-            controlsUI.style.opacity = '0';
-            controlsUI.style.transform = 'translateY(-30px)';
-
-            playRocketEngineSound();
-
-            tlIdle.clear();
-            var powerShake = new TimelineMax({ repeat: -1 });
-            powerShake.set("#rocket-image", { transformOrigin: "50% 85%" })
-                .fromTo("#rocket-image", 0.01, { x: -8, y: -3 }, { x: 8, y: 3, repeat: -1, yoyo: true });
-
-            const launchSequenceClock = setInterval(() => {
-                countdownSeconds--;
-                if (currentScreenShakeIntensity < 25) {
-                    currentScreenShakeIntensity += 8;
-                }
-
-                if (countdownSeconds <= 0) {
-                    clearInterval(launchSequenceClock);
-
-                    const dynamicSpeedCurve = setInterval(() => {
-                        smokeSpeedMultiplier += 0.5;
-                        warpSpeed += 4;
-                        if (warpSpeed > 60) clearInterval(dynamicSpeedCurve);
-                    }, 80);
-                }
-            }, 1000);
-        }
-    </script>
+        const days = Math.floor(dist / 86400000), hours = Math.floor((dist % 86400000) / 3600000), mins = Math.floor((dist % 3600000) / 60000), secs = Math.floor((dist % 60000) / 1000);
+        document.getElementById('hud-days').innerHTML = String(days).padStart(2,'0');
+        document.getElementById('hud-hours').innerHTML = String(hours).padStart(2,'0');
+        document.getElementById('hud-mins').innerHTML = String(mins).padStart(2,'0');
+        document.getElementById('hud-secs').innerHTML = String(secs).padStart(2,'0');
+    }
+    standardInterval = setInterval(updateStandardHUD, 1000);
+    updateStandardHUD();
+
+    // Starfield
+    const spaceCanvas = document.getElementById('spaceCanvas'), sCtx = spaceCanvas.getContext('2d'); let stars = [];
+    function resizeSpace(){ spaceCanvas.width = window.innerWidth; spaceCanvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeSpace); resizeSpace();
+    for(let i=0;i<180;i++) stars.push({ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, size: Math.random()*1.8+0.3, speed: Math.random()*0.6+0.1 });
+    function drawStars(){ sCtx.clearRect(0,0,spaceCanvas.width,spaceCanvas.height); sCtx.fillStyle="rgba(255,255,255,0.8)"; for(let s of stars){ sCtx.beginPath(); sCtx.arc(s.x,s.y,s.size,0,Math.PI*2); sCtx.fill(); s.y += s.speed * warpSpeed; if(s.y > spaceCanvas.height){ s.y = 0; s.x = Math.random()*spaceCanvas.width; } } requestAnimationFrame(drawStars); }
+    drawStars();
+
+    let tlIdle = new TimelineMax({ repeat: -1 }); tlIdle.set("#rocket-image", { transformOrigin: "50% 80%" }).fromTo("#rocket-image", 0.2, { x: -0.5, y: -0.2 }, { x: 0.5, y: 0.2, repeat: -1, yoyo: true });
+
+    // Smoke & Physics
+    const smokeCanvas = document.getElementById('smokeCanvas'), ctx = smokeCanvas.getContext('2d'); let smokeParticles = [], fireParticles = [];
+    function resizeSmoke(){ smokeCanvas.width = window.innerWidth; smokeCanvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeSmoke); resizeSmoke();
+    class Particle { constructor(x,y,type){ this.type=type; this.x=x+(Math.random()*40-20); this.y=y+(Math.random()*12-6); if(type==='fire'){ this.rad=Math.random()*20+15; this.maxRad=Math.random()*60+40; this.vx=Math.random()*4-2; this.vy=Math.random()*8+8; this.baseColor=Math.random()>0.4?'rgba(16,185,129,':'rgba(234,179,8,'; this.alpha=0.9; this.growth=1.5; this.fade=0.018; } else { this.rad=Math.random()*15+10; this.maxRad=Math.random()*280+150; this.vx=Math.random()*14-7; this.vy=Math.random()*-2-1; this.baseColor=['rgba(248,250,252,','rgba(203,213,225,','rgba(16,185,129,','rgba(15,23,42,'][Math.floor(Math.random()*4)]; this.alpha=0.6; this.growth=3.5; this.fade=0.0025; } }
+        update(){ this.x+=this.vx*smokeSpeedMult; this.y+=this.vy*smokeSpeedMult; if(this.rad<this.maxRad) this.rad+=this.growth*smokeSpeedMult; this.alpha-=this.fade*smokeSpeedMult; }
+        draw(){ ctx.beginPath(); let grad=ctx.createRadialGradient(this.x,this.y,this.rad*0.1,this.x,this.y,this.rad); grad.addColorStop(0,this.baseColor+this.alpha+')'); grad.addColorStop(0.3,this.baseColor+(this.alpha*0.5)+')'); grad.addColorStop(1,this.baseColor+'0)'); ctx.fillStyle=grad; ctx.arc(this.x,this.y,this.rad,0,Math.PI*2); ctx.fill(); }
+    }
+    let stageAnchor = document.getElementById('stageAnchor'), controlsUIelem = document.getElementById('controlsUI'), masterScene = document.getElementById('scene'), flashOverlay = document.getElementById('portalFlash');
+    let velocityY=0, accelerationY=0.08, currentBottom=40, animationTriggered=false, launchSequenceStarted=false;
+    
+    function animateFX() { ctx.clearRect(0,0,smokeCanvas.width,smokeCanvas.height); const rect = stageAnchor.getBoundingClientRect(); const nozzleX = rect.left+rect.width/2, nozzleY = rect.bottom-25; if(launchStarted && rect.bottom > -200){ for(let i=0;i<6;i++) fireParticles.push(new Particle(nozzleX,nozzleY,'fire')); for(let i=0;i<10;i++) smokeParticles.push(new Particle(nozzleX,nozzleY,'smoke')); if(currentShake>0){ let shakeX=(Math.random()-0.5)*currentShake, shakeY=(Math.random()-0.5)*currentShake; masterScene.style.transform=`translate(${shakeX}px, ${shakeY}px)`; } }
+        if(launchStarted && launchSequenceStarted){ velocityY += accelerationY; accelerationY += 0.025; currentBottom += velocityY; stageAnchor.style.bottom = currentBottom + 'px'; let scale = Math.max(0.1, 1 - (velocityY * 0.0022)); stageAnchor.style.transform = `translateX(-50%) scale(${scale})`; }
+        for(let i=smokeParticles.length-1;i>=0;i--) { smokeParticles[i].update(); smokeParticles[i].draw(); if(smokeParticles[i].alpha<=0) smokeParticles.splice(i,1); }
+        ctx.globalCompositeOperation='screen'; for(let i=fireParticles.length-1;i>=0;i--) { fireParticles[i].update(); fireParticles[i].draw(); if(fireParticles[i].alpha<=0) fireParticles.splice(i,1); } ctx.globalCompositeOperation='source-over';
+        if(launchStarted && launchSequenceStarted && rect.bottom <= -150 && !animationTriggered){ animationTriggered=true; currentShake=0; masterScene.style.transform='translate(0px,0px)'; fadeOutRocketSound(); TweenMax.to(flashOverlay, 1.2, {opacity: 1, ease: Power3.easeIn, onComplete:()=>{ window.location.href='https://www.meenamushroom.com'; } }); }
+        requestAnimationFrame(animateFX);
+    }
+    animateFX();
+
+    // Security Override
+    const modal = document.getElementById('secureOverrideModal'), digits = document.querySelectorAll('.passcode-digit'), errorMsg = document.getElementById('errorMessage');
+    const standardHUDDiv = document.getElementById('standardHUD');
+    const soloContainer = document.getElementById('soloCountdownContainer');
+    const soloSecondsSpan = document.getElementById('soloSeconds');
+
+    function toggleLeverTriggered(){ if(launchStarted) return; document.getElementById('switchConsole').classList.add('flipped'); playBeep(180,'triangle',0.15,0.25); setTimeout(()=>{ modal.classList.add('active'); digits[0].focus(); },250); }
+    window.stepPasscodeInput = function(input,idx){ playBeep(600,'sine',0.03,0.08); if(input.value.length>1) input.value=input.value.slice(0,1); if(input.value!=="" && idx<3) digits[idx+1].focus(); };
+    window.verifyOverrideSequence = function(){ let code = ""; digits.forEach(inp=>code+=inp.value); if(code==="1234"){ playBeep(587,'triangle',0.1,0.1); setTimeout(()=>playBeep(880,'triangle',0.3,0.1),80); errorMsg.style.opacity="0"; modal.classList.remove('active'); standardHUDDiv.style.display = 'none'; soloContainer.style.display = 'flex'; initiateSoloCountdown(); } else { playBeep(120,'sawtooth',0.3,0.2); errorMsg.style.opacity="1"; TweenMax.fromTo(".passcode-wrapper",0.05,{x:-10},{x:10,repeat:5,yoyo:true, onComplete:()=>{ digits.forEach(inp=>inp.value=""); digits[0].focus(); document.getElementById('switchConsole').classList.remove('flipped'); } }); } };
+
+    function initiateSoloCountdown() { isOverridden = true; clearInterval(standardInterval); let remaining = 10; const updateSolo = () => { soloSecondsSpan.innerText = remaining; if (remaining === 10) speakNumber("Ten"); else if (remaining === 9) speakNumber("Nine"); else if (remaining === 8) speakNumber("Eight"); else if (remaining === 7) speakNumber("Seven"); else if (remaining === 6) speakNumber("Six"); else if (remaining === 5) speakNumber("Five"); else if (remaining === 4) speakNumber("Four"); else if (remaining === 3) { speakNumber("Three"); playBeep(493.88,'sine',0.12,0.15); } else if (remaining === 2) { speakNumber("Two"); playBeep(493.88,'sine',0.12,0.15); } else if (remaining === 1) { speakNumber("One"); playBeep(493.88,'sine',0.12,0.15); clearInterval(soloInterval); startEngineAndShake(); } remaining--; }; updateSolo(); const soloInterval = setInterval(() => { if (remaining < 1) return; updateSolo(); }, 1000); }
+
+    function startEngineAndShake() { playRocketEngineSound(); currentShake = 18; tlIdle.clear(); new TimelineMax({repeat:-1}).set("#rocket-image",{transformOrigin:"50% 85%"}).fromTo("#rocket-image",0.02,{x:-12,y:-5},{x:12,y:5,repeat:-1,yoyo:true}); setTimeout(() => { launchStarted = true; launchSequenceStarted = true; controlsUIelem.style.opacity = '0'; controlsUIelem.style.transform = 'translateY(-30px)'; const speedBoost = setInterval(() => { smokeSpeedMult += 0.3; warpSpeed += 2; if (warpSpeed > 45) clearInterval(speedBoost); }, 100); }, 1500); }
+
+    function executeLaunch() { if (launchStarted) return; startEngineAndShake(); setTimeout(() => { launchStarted = true; launchSequenceStarted = true; controlsUIelem.style.opacity = '0'; controlsUIelem.style.transform = 'translateY(-30px)'; const speedBoost = setInterval(() => { smokeSpeedMult += 0.3; warpSpeed += 2; if (warpSpeed > 45) clearInterval(speedBoost); }, 100); }, 1500); }
+</script>
 </body>
-
 </html>
